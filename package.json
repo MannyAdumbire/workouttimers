@@ -1,7 +1,7 @@
 {
   "name": "assignment-3",
   "version": "1.0.0",
-  "homepage": "https://prof-tejera.github.io/assignment-3-MannyAdumbire",
+  "homepage": "https://mannycrafts.com/timers/",
   "dependencies": {
     "react": "^18.2.0",
     "react-dnd": "^16.0.1",

@@ -54,7 +54,6 @@ const Container = styled.div`
   color: white;
 `;
 
-const GHPage = "assignment-3-MannyAdumbire";
 const Nav = () => {
   const { tmrsParam } = useContext(WorkoutContext);
   // Rerender when the tmrsParam changes.
@@ -63,12 +62,12 @@ const Nav = () => {
     <nav>
       <ul style={{justifyContent:"center"}}>
         <MenuButton>
-          <StyledLink to={`/${GHPage}/workout/${tmrsParam}`}>
+          <StyledLink to={`/workout/${tmrsParam}`}>
             Workout
           </StyledLink>
         </MenuButton>
         <MenuButton>
-          <StyledLink to={`/${GHPage}/edit/${tmrsParam}`}>Edit</StyledLink>
+          <StyledLink to={`/edit/${tmrsParam}`}>Edit</StyledLink>
         </MenuButton>
         {/* <MenuButton>
           <StyledLink to={`/${GHPage}/docs/`}>Documentation</StyledLink>
@@ -102,10 +101,10 @@ const App = () => {
           <WorkoutContextWrap initialTmrsParam={tmrs}>
             <Nav />
             <Routes>
-              <Route path={`/${GHPage}/edit/`} element={<WorkoutEdit />} />
-              <Route path={`/${GHPage}/workout/`} element={<WorkoutView />} />
+              <Route path={`/edit/`} element={<WorkoutEdit />} />
+              <Route path={`/workout/`} element={<WorkoutView />} />
               <Route
-                path={`/${GHPage}/docs/`}
+                path={`/docs/`}
                 element={<DocumentationView />}
               />
               <Route path="*" element={<WorkoutEdit />} />
