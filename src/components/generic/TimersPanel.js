@@ -17,19 +17,24 @@ const StyledTimers = styled(ws.Container)`
 const TimerWrap = styled(ws.Container)`
   align-self: flex-start;
   cursor: pointer;
+  span{
+    visibility: hidden;
+  }
+  :hover span{
+    visibility: visible;
+  }
+  &:hover::after {
+    visibility: visible;
+  }
   ${(props) =>
     props.isEditing &&
     css`
-        border: solid 1px green;
-         ::after{
-            content: "📝️ Edit";
-         } 
+      border: solid 1px green;
     `}
   ${(props) =>
     props.canEdit &&
     css`
       :hover {
-        border: solid 1px green;
       }
     `}
   ${(props) =>
@@ -117,6 +122,9 @@ const TimersPanel = ({
             </ws.Container>
           )}
           <Timer key={`timer-${id}`} {...timer} />
+              <span>
+                ✏️️ Edit
+              </span>
         </TimerWrap>
       ))}
     </StyledTimers>

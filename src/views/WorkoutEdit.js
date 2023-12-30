@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useRef, useState } from "react";
-import styled from "styled-components";
+import styled, { css } from "styled-components";
 import * as ws from "../WorkoutStyles.js";
 
 // Contexts.
@@ -17,6 +17,12 @@ const EditTimersWrap = styled(ws.Container)`
   flex-direction: column;
   align-items: center;
   flex-grow: 0;
+  .timer-type-selects .timer-type-select:hover  ~ .timer-time-inputs .timer-input.invalid{
+    border-color:red;
+  }
+  .timer-type-selects:hover  + .timer-time-inputs .timer-input{
+    border-color:red;
+  }
 `;
 
 const Help = styled(ws.Container)`
@@ -27,8 +33,13 @@ const Help = styled(ws.Container)`
   flex: 1 0 auto;
   width: 100%;
   span {
-    ${ws.helpblink}
+    /* ${ws.helpblink} */
   }
+  ${(props) =>
+    props.hide &&
+    css`
+      visibility: hidden;
+    `}
 `;
 
 const restTimers = ["tabata"];
@@ -103,7 +114,7 @@ export const WorkoutEdit = () => {
         roundsTotal: roundsTimers.includes(type) ? roundsTotal : 1,
         secondsRest: restTimers.includes(type) ? secondsRest : 0,
         minutesRest: restTimers.includes(type) ? minutesRest : 0,
-        secsLeftRound: secsFromMinsSecs(minutesPerRound, secondsPerRound), 
+        secsLeftRound: secsFromMinsSecs(minutesPerRound, secondsPerRound),
         description: description,
       });
     } else {
@@ -152,7 +163,7 @@ export const WorkoutEdit = () => {
       onChangeFn: setMinutesPerRound,
       type: "number",
       min: "0",
-      showHelp: disabledTimerTypes.includes("stopwatch"),
+      disabled: disabledTimerTypes.includes("stopwatch"),
     },
     {
       C: ws.TimerInputBox,
@@ -162,7 +173,7 @@ export const WorkoutEdit = () => {
       min: "0",
       max: "59",
       type: "number",
-      showHelp: disabledTimerTypes.includes("stopwatch"),
+      disabled: disabledTimerTypes.includes("stopwatch"),
     },
     {
       C: ws.TimerInputBox,
@@ -180,7 +191,7 @@ export const WorkoutEdit = () => {
       onChangeFn: setMinutesRest,
       min: "0",
       type: "number",
-      showHelp: disabledTimerTypes.includes("tabata"),
+      disabled: disabledTimerTypes.includes("tabata"),
     },
     {
       C: ws.TimerInputBox,
@@ -190,41 +201,13 @@ export const WorkoutEdit = () => {
       min: "0",
       max: "59",
       type: "number",
-      showHelp: disabledTimerTypes.includes("tabata"),
+      disabled: disabledTimerTypes.includes("tabata"),
     },
   ];
   return (
     <EditTimersWrap>
       <TimerTotalDisplay title="Workout Length: " subtractElapsed={false} />
-      <ws.Container>
-        <ws.TimerInputGroup isEdit={!!timerToEdit}>
-          {timerInputs.map((timertype, idx) => (
-            <TimerInput
-              C={timertype.type}
-              key={`option-${idx}`}
-              label={timertype.label}
-              hover="silver"
-              value={timertype.value}
-              onChangeFn={timertype.onChangeFn}
-              disabled={timertype.disabled}
-              {...timertype}
-            />
-          ))}
-        </ws.TimerInputGroup>
-        {!timerToEdit && disabledTimerTypes.length === timerTypes.length ? (
-          <Help isEdit={true}>
-            <span>👈 </span>EDIT timer
-          </Help>
-        ) : (
-          ""
-        )}
-        {timerToEdit && (
-          <Help isEdit={true}>
-            {/* <span>👈</span>EDIT {timerToEdit && `#${timerToEdit.timerId}`} */}
-          </Help>
-        )}
-      </ws.Container>
-      <ws.Container style={{ flexDirection: "row" }}>
+      <ws.Container className="timer-type-selects" style={{ flexDirection: "row" }}>
         {timerTypeOptions.map((option, idx) => (
           <TimerTypeSelect
             key={`option-${option.value}${idx}`}
@@ -239,21 +222,43 @@ export const WorkoutEdit = () => {
             {...option}
           />
         ))}
-        {!timerToEdit && disabledTimerTypes.length !== timerTypes.length ? (
-          <Help isEdit={!timers.size} title="Add a new timer">
-            <span>👈</span> ADD timer
-          </Help>
-        ) : (
-          ""
-        )}
-        {timerToEdit ? (
-          <Help isEdit={timerToEdit} title="CONFIRM type to update">
-            <span>👈</span> <strong>SAVE{" "}</strong>
-            {timerToEdit ? <>{`#${timerToEdit.timerId}`}</> : ""}
-          </Help>
-        ) : (
-          ""
-        )}
+        <Help
+          hide={(disabledTimerTypes.length === timerTypes.length)}
+          title="Add a new timer"
+        >
+          <span>👈</span>
+          {!timerToEdit ? (
+            <>ADD timer</>
+          ) : (
+            <>
+              <strong> SAVE </strong>
+              #{timerToEdit.timerId}
+            </>
+          )}
+        </Help>
+      </ws.Container>
+      <ws.Container className="timer-time-inputs">
+        <ws.TimerInputGroup isEdit={!!timerToEdit}>
+          {timerInputs.map((timerinput, idx) => (
+            <TimerInput
+              C={timerinput.type}
+              key={`option-${idx}`}
+              label={timerinput.label}
+              hover="silver"
+              value={timerinput.value}
+              onChangeFn={timerinput.onChangeFn}
+              disabled={timerinput.disabled}
+              {...timerinput}
+            />
+          ))}
+        </ws.TimerInputGroup>
+        <Help
+          hide={
+            (timerToEdit || disabledTimerTypes.length !== timerTypes.length)
+          }
+        >
+          <span>👈 </span>EDIT timer
+        </Help>
       </ws.Container>
       <TimersPanel
         canEdit={true}

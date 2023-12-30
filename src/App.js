@@ -81,7 +81,7 @@ const App = () => {
   return (
     // Remove the hash from the URL.
     <Container>
-      <Router>
+      <Router basename="/timers">
         <ErrorBoundary
           fallback={
             <ws.Container>

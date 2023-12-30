@@ -184,7 +184,6 @@ export const TimerInputBox = styled.input`
   &:disabled {
     background-color: black;
     color: gray;
-    display: none;
   }
   :disabled + label {
     background-color: black;

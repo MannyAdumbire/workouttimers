@@ -10,14 +10,16 @@ const TimerType = styled(ws.Button)`
   ${(props) =>
     props.disabledTypes.includes(props.value) &&
     css`
-      visibility: hidden;
-      pointer-events: none;
+      :hover {
+        cursor: not-allowed;
+      }
+      filter: grayscale(100%);
+      /* pointer-events: none; */
     `}
   ${(props) =>
     props.selected &&
     css`
       border: solid 1px green;
-      ${ws.helpblink}
     `}
   :hover::before {
     content: "⏰";
@@ -37,7 +39,6 @@ const TimerOptionsSelect = ({
   options,
   selected,
   onChangeFn,
-  disabled,
   isEdit,
   currentType,
   timerId,
@@ -50,16 +51,18 @@ const TimerOptionsSelect = ({
 
   const safeLabel = label.replace(/[^a-zA-Z]+/g, "").toLowerCase();
 
+  const invalid = disabledTypes.includes(props.value);
   return (
     <ws.TimerInputGroup currentType={currentType}>
       {options.map((optionValue, idx) => (
         <TimerType
+          className={`${invalid ? "invalid" : ""} "timer-type-select"`}
           key={`${optionValue}`}
           hover="lightgreen"
           onClick={handleChange}
           id={`${safeLabel}-${optionValue}`}
           timerId={timerId || false}
-          selected={ currentType === optionValue.toLowerCase() }
+          selected={currentType === optionValue.toLowerCase()}
           disabledTypes={disabledTypes}
           value={optionValue}
           {...(currentType === optionValue.toLowerCase && { selected: "" })}

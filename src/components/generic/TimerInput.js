@@ -2,7 +2,7 @@ import React from "react";
 import styled from "styled-components";
 import * as ws from "../../WorkoutStyles";
 
-const TimerInputs = styled(ws.Container)`
+export const TimerInputs = styled(ws.Container)`
   display: flex;
   flex-direction: column-reverse;
   cursor: pointer;
@@ -24,9 +24,8 @@ const TimerInput = ({ label, value, onChangeFn, disabled, ...props }) => {
     <TimerInputs disabled={disabled}>
       <props.C
         {...props}
-        disabled={disabled}
         type={type}
-        className="timer-input"
+        className={`${disabled && "disabled"} timer-input`}
         name={id}
         id={id}
         value={value ?? ""}
